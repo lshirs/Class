@@ -7,8 +7,8 @@
 
     <h2>进行中</h2>
 
-    <ul v-if="!item.checked">
-      <li v-for="(item,key) in list" :key="key">
+    <ul>
+      <li v-for="(item,key) in list" :key="key" v-if="!item.checked">
         <input type="checkbox" v-model="item.checked" @change="saveList()" />
         {{item.title}} --
         <button @click="removeData(key)">删除</button>
@@ -19,8 +19,8 @@
     <br />
     <h2>已完成</h2>
 
-    <ul v-if="item.checked">
-      <li v-for="(item,key) in list" :key="key">
+    <ul>
+      <li v-for="(item,key) in list" :key="key" v-if="item.checked">
         <input type="checkbox" v-model="item.checked" @change="saveList()" />
         {{item.title}} --
         <button @click="removeData(key)">删除</button>
@@ -30,10 +30,6 @@
 </template>
 
 <script>
-import storage from "./model/storage.js";
-
-// console.log(storage);
-
 export default {
   data() {
     return {
@@ -51,21 +47,21 @@ export default {
         });
       }
 
-      storage.set("list", this.list);
+      localStorage.setItem("list", JSON.stringify(this.list));
     },
     removeData(key) {
       this.list.splice(key, 1);
 
-      storage.set("list", this.list);
+      localStorage.setItem("list", JSON.stringify(this.list));
     },
     saveList() {
-      storage.set("list", this.list);
+      localStorage.setItem("list", JSON.stringify(this.list));
     }
   },
   mounted() {
     /*生命周期函数       vue页面刷新就会触发的方法*/
 
-    var list = storage.get("list");
+    var list = JSON.parse(localStorage.getItem("list"));
 
     if (list) {
       /*注意判断*/
